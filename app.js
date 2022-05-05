@@ -1,14 +1,11 @@
 const express = require('express');
 const path = require('path');
-
-
 const app = express();
 
-app.get('/projet1', (req, res, next) => {
-    res.sendFile(path.join(__dirname,'views','projet1.html'));
-});
+app.use(express.static(path.join(__dirname,'public')));
 
-app.use(express.static(path.join(__dirname, 'views')));
+const indexProjet1 = require('./routes/projet1');
 
+app.use('/projet1', indexProjet1);
 
 app.listen(8080);
