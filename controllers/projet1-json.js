@@ -22,17 +22,27 @@ exports.getSuccursales = (req, res, next)=>{
 exports.createSuccursale = (req, res, next)=>{
     const nome = req.body.nome;
     const budget = req.body.budget;
-    let existSuccursale = getAllSuccursales();
-    existSuccursale.push({nome, budget});
-    saveSuccursale(existSuccursale);
-    res.status(200).send({
-        message: 'Succursale created successfully',
-        succursale: {nome: nome, budget: budget}
+    let succursales = getAllSuccursales().filter(succursale => succursale.nome === nome);
+    if(succursales.length > 0) {
+      res.status(200).send({
+         message: 'Succursale already exists',
+     });
+    } else {
+      let existSuccursale = getAllSuccursales();
+      existSuccursale.push({nome, budget});
+      saveSuccursale(existSuccursale);
+      res.status(200).send({
+      message: 'Succursale created successfully',
+      succursale: {nome: nome, budget: budget}
     });
+    }
+    
+    
 };
 
 exports.getSuccursale = (req, res, next)=>{
    const succursales = getAllSuccursales().filter(succursale => succursale.nome === req.params.nome);
+   console.log(req.params.nome)
    res.status(200).send(succursales);
 };
 
@@ -52,17 +62,27 @@ exports.updateSuccursale = (req, res, next)=>{
 };
 
 exports.deleteSuccursale = (req, res, next)=>{
+   let exists = false
    const succursales = getAllSuccursales();
    for(let i = 0; i < succursales.length; i++){
       if(succursales[i].nome === req.params.nome){
+         exists = true;
           succursales.splice(i, 1);
       }
    }
-   saveSuccursale(succursales);
-   res.status(200).send({
-      message: 'Succursale delete successfully',
-      succursale: {nome: req.params.nome}
-   });
+   if(exists){
+      saveSuccursale(succursales);
+      res.status(200).send({
+         message: 'Succursale delete successfully',
+         succursale: {nome: req.params.nome}
+      });
+   } else {
+      res.status(200).send({
+         message: 'Succursale doesn\'t exist',
+         succursale: {nome: req.params.nome}
+      });
+   }
+  
 };
 
 
