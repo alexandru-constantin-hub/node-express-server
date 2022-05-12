@@ -328,7 +328,7 @@ function ajax_tenteConnexion() {
         let requestOptions = {
             method: 'POST',
             headers: {"Content-type": "application/json; charset=UTF-8"},
-            body: JSON.stringify({nome: tbVilleAjout.value, budget: '100001'})
+            body: JSON.stringify({nome: tbVilleAjout.value, budget: tbBudgetAjout})
         };
         fetch('http://localhost:8080/succursales/succursale', requestOptions)
             .then(response => response.json())
